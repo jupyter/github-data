@@ -38,17 +38,17 @@ jobs:
 
       - name: Get current date for release name
         id: get_date
-        run: echo "RELEASE_DATE=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV # Set environment variable with current date and time
+        run: echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV # Set environment variable with current date and time
 
       - name: Create Release and Upload Database File
         uses: softprops/action-gh-release@v1
         with:
           # Use the current date for the release name
-          name: Database Release ${{ env.RELEASE_DATE }}
+          name: ${{ env.RELEASE_DATE }}
           # A unique tag is required for releases.
           # We'll use the date and the run ID to ensure uniqueness.
           tag_name: db-${{ env.RELEASE_DATE }}-${{ github.run_id }}
           # Attach the generated database file to the release
           files: data/github.db
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically provides this token
+          GITHUB_TOKEN: ${{ secrets.PAT }} # Use personal access token instead of default token
