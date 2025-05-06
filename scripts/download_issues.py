@@ -28,7 +28,10 @@ def download_issues_data(org, db):
         run(cmd.split())
     print(f"Finished loading new issues to {db}")
 
-org = "jupyter-book"
 path_out = (here / ".." / "data" / "github.db").resolve()
 print(f"Downloading to {path_out}")
-download_issues_data(org, path_out)
+
+orgs = ["jupyter-book", "jupyter", "jupyterlab", "jupyterhub", "jupyter-server", "jupyter-widgets"]
+for org in orgs:
+  print(f"Downloading issues for: {org}")
+  download_issues_data(org, path_out)
