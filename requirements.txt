@@ -1,0 +1,4 @@
+pandas
+sqlite3
+github-to-sqlite
+rich
