@@ -35,6 +35,8 @@ jobs:
 
       - name: Run database generation script
         run: python scripts/download_issues.py # Execute your local script
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }} # Pass PAT as GITHUB_TOKEN to the script
 
       - name: Get current date for release name
         id: get_date
