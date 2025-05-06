@@ -28,6 +28,7 @@ def download_issues_data(org, db):
         run(cmd.split())
     print(f"Finished loading new issues to {db}")
 
-path_out = (here / ".." / "data" / "github.db").resolve()
+org = "jupyter-book"
+path_out = (here / ".." / "data" / f"{org}.db").resolve()
 print(f"Downloading to {path_out}")
-download_issues_data("jupyter-book", path_out)
+download_issues_data(org, path_out)

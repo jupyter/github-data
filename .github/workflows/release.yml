@@ -47,8 +47,8 @@ jobs:
           name: ${{ env.RELEASE_DATE }}
           # A unique tag is required for releases.
           # We'll use the date and the run ID to ensure uniqueness.
-          tag_name: db-${{ env.RELEASE_DATE }}-${{ github.run_id }}
-          # Attach the generated database file to the release
-          files: data/github.db
+          tag_name: db-${{ env.RELEASE_DATE }}
+          # Attach all files from the data directory
+          files: data/*
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }} # Use personal access token instead of default token
