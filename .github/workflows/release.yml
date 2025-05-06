@@ -47,9 +47,9 @@ jobs:
         with:
           # Use the current date for the release name
           name: ${{ env.RELEASE_DATE }}
-          # A unique tag is required for releases.
-          # We'll use the date and the run ID to ensure uniqueness.
-          tag_name: db-${{ env.RELEASE_DATE }}
+          # Use a consistent tag name that will be overwritten
+          # This way we aren't publishing an ever-increasing amount of data.
+          tag_name: latest
           # Attach all files from the data directory
           files: data/*
         env:
