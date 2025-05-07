@@ -35,7 +35,8 @@ slideshow:
 tags: [remove-cell]
 ---
 org = "{{ org }}"
-if org == "{{ org }}":
+# If the template has been converted to pages, then org will not have { org } structure
+if "{ org }" in org:
     org = "jupyter-book"
 ```
 
