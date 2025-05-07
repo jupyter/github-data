@@ -110,6 +110,7 @@ editable: true
 slideshow:
   slide_type: ''
 tags: [remove-input]
+class: col-page-right
 ---
 issues_sorted = issues.sort_values("positive", ascending=False).head(100)[["mdtitle", "repo", "bodyshort", "positive"]]
 issues_sorted = issues_sorted.rename(columns={"bodyshort": "body", "mdtitle": "title", "positive": "👍"})
@@ -123,8 +124,4 @@ styledict = {ii: render_markdown for ii in md_cols}
 df_style = issues_sorted
 styled_df = issues_sorted.style.format(styledict | {"👍": int}).hide(axis="index")
 styled_df
-```
-
-```{code-cell} ipython3
-
 ```
