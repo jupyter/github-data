@@ -19,7 +19,11 @@ def download_issues_data(org, db):
     cmd = f"github-to-sqlite repos {db} {org}"
     print(cmd)
     run(cmd.split())
-    repos = df_from_sql("SELECT * FROM repos;", db)
+    query = """
+        SELECT * FROM repos 
+        WHERE datetime(updated_at) > datetime('now', '-1 year')
+    """
+    repos = df_from_sql(query, db)
     repos = repos.set_index("id")
     
     # For each repository, download its issues
@@ -30,6 +34,28 @@ def download_issues_data(org, db):
         print(cmd)
         run(cmd.split())
     print(f"Finished loading new issues to {db}")
+
+
+def download_comments_data(org, db):
+    # Load all repositories in a local DB
+    cmd = f"github-to-sqlite comments {db} {org}"
+    print(cmd)
+    run(cmd.split())
+    query = """
+        SELECT * FROM repos 
+        WHERE datetime(updated_at) > datetime('now', '-1 year')
+    """
+    repos = df_from_sql(query, db)
+    repos = repos.set_index("id")
+    
+    # For each repository, download its issues
+    repos = repos["full_name"].tolist()
+    print(f"Downloading comments from {len(repos)} repositories...")
+    for repo in track(repos):
+        cmd = f"github-to-sqlite issue-comments {db} {repo}"
+        print(cmd)
+        run(cmd.split())
+    print(f"Finished loading new comments to {db}")
 
 
 def main():
@@ -43,6 +69,9 @@ def main():
     
     print(f"Downloading issues for: {org}")
     download_issues_data(org, path_out)
+
+    print(f"Downloading comments for: {org}")
+    download_comments_data(org, path_out)
 
 
 if __name__ == "__main__":
