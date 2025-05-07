@@ -7,6 +7,8 @@ project:
   # authors: []
   github: https://github.com/choldgraf/os-issues
   toc:
+    - file: index.md
+      title: "Issue tables for Open Source Projects"
     - pattern: org/*.md
 site:
   template: book-theme

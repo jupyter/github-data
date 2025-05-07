@@ -102,7 +102,7 @@ issues["bodyshort"] = issues["body"].map(lambda a: a.replace("#", "")[:400] if a
 
 +++ {"editable": true, "slideshow": {"slide_type": ""}}
 
-A table of all the open issues in the [`jupyer-book` github organization](https://github.com/jupyter-book), sorted by the number of 👍 and ❤️ reactions.
+A table of all the open issues in the [`{{ org }}` github organization](https://github.com/{{ org }}), sorted by the number of 👍 and ❤️ reactions.
 
 ```{code-cell} ipython3
 ---
