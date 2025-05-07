@@ -14,20 +14,29 @@ def df_from_sql(query, db):
     con.close()
 
 
-def download_issues_data(org, db):
-    # Load all repositories in a local DB
+def download_repos_data(org, db):
+    """Download repository data from GitHub to SQLite database."""
     cmd = f"github-to-sqlite repos {db} {org}"
     print(cmd)
     run(cmd.split())
+
+
+def load_repos_data(db):
+    """Load and filter repository list from SQLite database. Only if updated in the last year."""
     query = """
         SELECT * FROM repos 
         WHERE datetime(updated_at) > datetime('now', '-1 year')
     """
     repos = df_from_sql(query, db)
     repos = repos.set_index("id")
+    return repos["full_name"].tolist()
+
+
+def download_issues_data(org, db):
+    # Get list of repositories
+    repos = load_repos_data(db)
     
     # For each repository, download its issues
-    repos = repos["full_name"].tolist()
     print(f"Downloading issues from {len(repos)} repositories...")
     for repo in track(repos):
         cmd = f"github-to-sqlite issues {db} {repo}"
@@ -37,19 +46,10 @@ def download_issues_data(org, db):
 
 
 def download_comments_data(org, db):
-    # Load all repositories in a local DB
-    cmd = f"github-to-sqlite comments {db} {org}"
-    print(cmd)
-    run(cmd.split())
-    query = """
-        SELECT * FROM repos 
-        WHERE datetime(updated_at) > datetime('now', '-1 year')
-    """
-    repos = df_from_sql(query, db)
-    repos = repos.set_index("id")
+    # Get list of repositories
+    repos = load_repos_data(db)
     
-    # For each repository, download its issues
-    repos = repos["full_name"].tolist()
+    # For each repository, download its comments
     print(f"Downloading comments from {len(repos)} repositories...")
     for repo in track(repos):
         cmd = f"github-to-sqlite issue-comments {db} {repo}"
@@ -66,6 +66,10 @@ def main():
     org = sys.argv[1]
     path_out = (here / ".." / "data" / f"{org}.db").resolve()
     print(f"Downloading to {path_out}")
+    
+    # Download repository data once
+    print(f"Downloading repository data for: {org}")
+    download_repos_data(org, path_out)
     
     print(f"Downloading issues for: {org}")
     download_issues_data(org, path_out)
