@@ -10,3 +10,6 @@ markdown
 github-to-sqlite
 rich
 
+# Writing
+jupyterlab-myst
+jupytext

@@ -1,6 +1,4 @@
 ---
-title: Creating a list of issue upvotes in Jupyter Book
-date: "2025-05-05"
 jupytext:
   formats: ipynb,md:myst
   text_representation:
@@ -14,7 +12,15 @@ kernelspec:
   name: python3
 ---
 
+# Jupyter Book issue voting
+
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-cell]
+---
 import pandas as pd
 import sqlite3
 import pooch
@@ -22,6 +28,13 @@ from markdown import markdown
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-cell]
+---
+# Download latest release data for Jupyter Book
 file_path = pooch.retrieve(
     # URL to one of Pooch's test files
     url="https://github.com/choldgraf/os-issues/releases/download/latest/github.db",
@@ -30,6 +43,12 @@ file_path = pooch.retrieve(
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-cell]
+---
 def df_from_sql(query, db):
     con = sqlite3.connect(db)
     return pd.read_sql(query, con)
@@ -37,6 +56,12 @@ def df_from_sql(query, db):
 ```
 
 ```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-cell]
+---
 repos = df_from_sql("SELECT * FROM repos;", file_path).set_index("id")
 issues = df_from_sql("SELECT * FROM issues;", file_path)
 issues = issues.query("state == 'open'")
@@ -59,18 +84,35 @@ for ix, irow in issues.iterrows():
     issues.loc[ix, "mdtitle"] = f"[{irow['title']}]({url})"
 
 # Add a short body
-issues["bodyshort"] = issues["body"].map(lambda a: a.replace("#", "")[:200] if a else '')
+issues["bodyshort"] = issues["body"].map(lambda a: a.replace("#", "")[:400] if a else '')
 ```
 
++++ {"editable": true, "slideshow": {"slide_type": ""}}
+
+A table of all the open issues in the [`jupyer-book` github organization](https://github.com/jupyter-book), sorted by the number of 👍 and ❤️ reactions.
+
 ```{code-cell} ipython3
-issues_sorted = issues.sort_values("positive", ascending=False).head(50)[["mdtitle", "repo", "bodyshort", "positive"]]
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-input]
+class: "col-page"
+---
+issues_sorted = issues.sort_values("positive", ascending=False).head(100)[["mdtitle", "repo", "bodyshort", "positive"]]
+issues_sorted = issues_sorted.rename(columns={"bodyshort": "body", "mdtitle": "title", "positive": "👍"})
 
 def render_markdown(text):
     if isinstance(text, str): # Ensure the cell content is a string
         return markdown(text)
     return text
-md_cols = ["mdtitle", "bodyshort", "repo"]
+md_cols = ["title", "body", "repo"]
 styledict = {ii: render_markdown for ii in md_cols}
-styled_df = issues_sorted.style.format(styledict | {"positive": int}).hide(axis="index")
+df_style = issues_sorted
+styled_df = issues_sorted.style.format(styledict | {"👍": int}).hide(axis="index")
 styled_df
+```
+
+```{code-cell} ipython3
+
 ```
