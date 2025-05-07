@@ -44,32 +44,28 @@ jobs:
       - name: Upload job outputs as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: job-output-artifact
-          path: ./data
+          name: db-${{ matrix.org }}
+          path: data/${{ matrix.org }}.db
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact from build job
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: job-output-artifact
-          path: ./data # Download into a specific directory
+          path: ./data
+          merge-multiple: true
 
       - name: Get current date for release name
         id: get_date
-        run: echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV # Set environment variable with current date and time
+        run: echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Create Release and Upload Database File
+      - name: Create Release and Upload Database Files
         uses: softprops/action-gh-release@v1
         with:
-          # Use the current date for the release name
           name: ${{ env.RELEASE_DATE }}
-          # Use a consistent tag name that will be overwritten
-          # This way we aren't publishing an ever-increasing amount of data.
           tag_name: latest
-          # Attach all files from the data directory
-          files: data/*
+          files: data/*.db
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }} # Use personal access token instead of default token
+          GITHUB_TOKEN: ${{ secrets.PAT }}
