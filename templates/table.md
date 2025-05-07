@@ -1,6 +1,6 @@
 ---
 jupytext:
-  formats: ipynb,md:myst
+  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
@@ -12,7 +12,7 @@ kernelspec:
   name: python3
 ---
 
-# Jupyter Book issue voting
+# {{ org }}
 
 ```{code-cell} ipython3
 ---
@@ -34,10 +34,22 @@ slideshow:
   slide_type: ''
 tags: [remove-cell]
 ---
+org = "{{ org }}"
+if org == "{{ org }}":
+    org = "jupyter-book"
+```
+
+```{code-cell} ipython3
+---
+editable: true
+slideshow:
+  slide_type: ''
+tags: [remove-cell]
+---
 # Download latest release data for Jupyter Book
 file_path = pooch.retrieve(
     # URL to one of Pooch's test files
-    url="https://github.com/choldgraf/os-issues/releases/download/latest/github.db",
+    url=f"https://github.com/choldgraf/os-issues/releases/download/latest/{org}.db",
     known_hash=None,
 )
 ```
@@ -97,7 +109,6 @@ editable: true
 slideshow:
   slide_type: ''
 tags: [remove-input]
-class: "col-page"
 ---
 issues_sorted = issues.sort_values("positive", ascending=False).head(100)[["mdtitle", "repo", "bodyshort", "positive"]]
 issues_sorted = issues_sorted.rename(columns={"bodyshort": "body", "mdtitle": "title", "positive": "👍"})

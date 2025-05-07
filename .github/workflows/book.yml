@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Build HTML Assets
-        run: cd book && myst build --html --execute
+        run: python scripts/generate_pages.py && cd book && myst build --html --execute
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
