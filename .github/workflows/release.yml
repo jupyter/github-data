@@ -13,7 +13,7 @@ permissions:
   contents: write  # Required for creating releases
 
 jobs:
-  build_and_release:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,6 +41,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }} # Pass PAT as GITHUB_TOKEN to the script
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Get current date for release name
         id: get_date
         run: echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV # Set environment variable with current date and time
