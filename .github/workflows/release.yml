@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        org: [jupyter, numfocus, pydata, scipy]  # Add your organizations here
+        org: [jupyter, jupyterlab, jupyter-book, jupyter-server, jupyterhub]
 
     steps:
       - name: Checkout code
