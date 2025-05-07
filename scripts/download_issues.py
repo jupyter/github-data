@@ -3,13 +3,16 @@ import pandas as pd
 import sqlite3
 from rich.progress import track
 from pathlib import Path
+import sys
 
 here = Path(__file__).parent
+
 
 def df_from_sql(query, db):
     con = sqlite3.connect(db)
     return pd.read_sql(query, con)
     con.close()
+
 
 def download_issues_data(org, db):
     # Load all repositories in a local DB
@@ -28,10 +31,19 @@ def download_issues_data(org, db):
         run(cmd.split())
     print(f"Finished loading new issues to {db}")
 
-path_out = (here / ".." / "data" / "github.db").resolve()
-print(f"Downloading to {path_out}")
 
-orgs = ["jupyter-book", "jupyter", "jupyterlab", "jupyterhub", "jupyter-server", "jupyter-widgets"]
-for org in orgs:
-  print(f"Downloading issues for: {org}")
-  download_issues_data(org, path_out)
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python download_issues.py <organization>")
+        sys.exit(1)
+    
+    org = sys.argv[1]
+    path_out = (here / ".." / "data" / f"{org}.db").resolve()
+    print(f"Downloading to {path_out}")
+    
+    print(f"Downloading issues for: {org}")
+    download_issues_data(org, path_out)
+
+
+if __name__ == "__main__":
+    main()

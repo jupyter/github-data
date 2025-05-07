@@ -175,3 +175,4 @@ cython_debug/
 
 # Where we download the data
 data
+book/_build

@@ -1,3 +1,12 @@
+# Book
+mystmd
 pandas
+pooch
+jupyterlab
+ipython
+markdown
+
+# Downloading data
 github-to-sqlite
 rich
+

@@ -15,6 +15,9 @@ permissions:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        org: [jupyter, numfocus, pydata, scipy]  # Add your organizations here
 
     steps:
       - name: Checkout code
@@ -34,7 +37,7 @@ jobs:
         run: mkdir -p data # Ensure the data directory exists
 
       - name: Run database generation script
-        run: python scripts/download_issues.py # Execute your local script
+        run: python scripts/download_issues.py ${{ matrix.org }} # Execute script with org argument
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }} # Pass PAT as GITHUB_TOKEN to the script
 
