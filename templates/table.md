@@ -110,6 +110,7 @@ editable: true
 slideshow:
   slide_type: ''
 tags: [remove-input]
+label: {{ org }}-table
 class: col-page-right
 ---
 issues_sorted = issues.sort_values("positive", ascending=False).head(100)[["mdtitle", "repo", "bodyshort", "positive"]]
