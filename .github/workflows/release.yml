@@ -41,10 +41,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }} # Pass PAT as GITHUB_TOKEN to the script
 
+      - name: Upload job outputs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: job-output-artifact
+          path: ./data
+
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: job-output-artifact
+          path: ./data # Download into a specific directory
+
       - name: Get current date for release name
         id: get_date
         run: echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV # Set environment variable with current date and time
