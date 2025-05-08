@@ -21,7 +21,7 @@ def download_repos_data(org, db):
     run(cmd.split())
 
 
-def download_repos_data(repos, db):
+def download_contributors_data(repos, db):
     """Download repository data from GitHub to SQLite database."""
     cmd = f"github-to-sqlite contributors {db} {" ".join(repos)}"
     print(cmd)
