@@ -22,14 +22,19 @@ def download_repos_data(org, db):
 
 
 def download_contributors_data(repos, db):
-    """Download repository data from GitHub to SQLite database."""
-    cmd = f"github-to-sqlite contributors {db} {" ".join(repos)}"
+    """Download contributor data for the given repositories to SQLite database."""
+    repos_str = " ".join(repos)
+    cmd = (
+        f"github-to-sqlite contributors {db} "
+        f"{repos_str}"
+    )
     print(cmd)
     run(cmd.split())
 
 
 def load_repos_data(db):
-    """Load and filter repository list from SQLite database. Only if updated in the last year."""
+    """Load and filter repository list from SQLite database. 
+    Only if updated in the last year."""
     query = """
         SELECT * FROM repos 
         WHERE datetime(updated_at) > datetime('now', '-1 year')
@@ -77,9 +82,12 @@ def main():
     # Download repository data once
     print(f"Downloading repository data for: {org}")
     download_repos_data(org, path_out)
-
+    
+    # Get list of repositories for subsequent operations
+    repos = load_repos_data(path_out)
+    
     print(f"Downloading contributor data for: {org}")
-    download_contributors_data(org, path_out)
+    download_contributors_data(repos, path_out)
 
     print(f"Downloading issues for: {org}")
     download_issues_data(org, path_out)
