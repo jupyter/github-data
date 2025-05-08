@@ -21,6 +21,13 @@ def download_repos_data(org, db):
     run(cmd.split())
 
 
+def download_repos_data(repos, db):
+    """Download repository data from GitHub to SQLite database."""
+    cmd = f"github-to-sqlite contributors {db} {" ".join(repos)}"
+    print(cmd)
+    run(cmd.split())
+
+
 def load_repos_data(db):
     """Load and filter repository list from SQLite database. Only if updated in the last year."""
     query = """
@@ -70,7 +77,10 @@ def main():
     # Download repository data once
     print(f"Downloading repository data for: {org}")
     download_repos_data(org, path_out)
-    
+
+    print(f"Downloading contributor data for: {org}")
+    download_contributors_data(org, path_out)
+
     print(f"Downloading issues for: {org}")
     download_issues_data(org, path_out)
 
