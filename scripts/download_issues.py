@@ -57,6 +57,19 @@ def download_issues_data(org, db):
     print(f"Finished loading new issues to {db}")
 
 
+def download_prs_data(org, db):
+    # Get list of repositories
+    repos = load_repos_data(db)
+    
+    # For each repository, download its issues
+    print(f"Downloading PRs from {len(repos)} repositories...")
+    for repo in track(repos):
+        cmd = f"github-to-sqlite pull-requests {db} {repo}"
+        print(cmd)
+        run(cmd.split())
+    print(f"Finished loading new PRs to {db}")
+
+
 def download_comments_data(org, db):
     # Get list of repositories
     repos = load_repos_data(db)
@@ -91,6 +104,9 @@ def main():
 
     print(f"Downloading issues for: {org}")
     download_issues_data(org, path_out)
+
+    print(f"Downloading PRs for: {org}")
+    download_prs_data(org, path_out)
 
     print(f"Downloading comments for: {org}")
     download_comments_data(org, path_out)
