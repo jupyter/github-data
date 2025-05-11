@@ -64,5 +64,3 @@ jobs:
           name: ${{ env.RELEASE_DATE }}
           tag_name: latest
           files: data/*.db
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
