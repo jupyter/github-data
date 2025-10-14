@@ -10,9 +10,9 @@ project:
     - file: index.md
       title: "Issue tables for Open Source Projects"
     - pattern: org/*.md
+    - file: about.md
 site:
   template: book-theme
   options:
     logo_text: Issue voting for Jupyter projects
-    folders: true
     hide_outline: true

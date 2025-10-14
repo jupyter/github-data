@@ -16,10 +16,7 @@ kernelspec:
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-cell]
+tags: ["remove-cell"]
 ---
 import pandas as pd
 import sqlite3
@@ -29,10 +26,7 @@ from markdown import markdown
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-cell]
+tags: ["remove-cell"]
 ---
 org = "{{ org }}"
 # If the template has been converted to pages, then org will not have { org } structure
@@ -42,10 +36,7 @@ if "{ org }" in org:
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-cell]
+tags: ["remove-cell"]
 ---
 # Download latest release data for Jupyter Book
 file_path = pooch.retrieve(
@@ -57,10 +48,7 @@ file_path = pooch.retrieve(
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-cell]
+tags: ["remove-cell"]
 ---
 def df_from_sql(query, db):
     con = sqlite3.connect(db)
@@ -70,10 +58,7 @@ def df_from_sql(query, db):
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-cell]
+tags: ["remove-cell"]
 ---
 repos = df_from_sql("SELECT * FROM repos;", file_path).set_index("id")
 issues = df_from_sql("SELECT * FROM issues;", file_path)
@@ -100,16 +85,11 @@ for ix, irow in issues.iterrows():
 issues["bodyshort"] = issues["body"].map(lambda a: a.replace("#", "")[:400] if a else '')
 ```
 
-+++ {"editable": true, "slideshow": {"slide_type": ""}}
-
 A table of all the open issues in the [`{{ org }}` github organization](https://github.com/{{ org }}), sorted by the number of 👍 and ❤️ reactions.
 
 ```{code-cell} ipython3
 ---
-editable: true
-slideshow:
-  slide_type: ''
-tags: [remove-input]
+tags: ["remove-input"]
 label: {{ org }}-table
 class: col-page-right
 ---
