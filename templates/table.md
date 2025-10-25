@@ -41,7 +41,7 @@ tags: ["remove-cell"]
 # Download latest release data for Jupyter Book
 file_path = pooch.retrieve(
     # URL to one of Pooch's test files
-    url=f"https://github.com/choldgraf/os-issues/releases/download/latest/{org}.db",
+    url=f"https://github.com/jupyter/issue-data/releases/download/latest/{org}.db",
     known_hash=None,
 )
 ```
