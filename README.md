@@ -37,3 +37,7 @@ Launch JupyterLab in the same environment used to build the book (for debugging)
 ```bash
 nox -s lab
 ```
+
+## History
+
+This repository was originally built by [@choldgraf](https://github.com/choldgraf) before being moved to the Jupyter org so it could be used and maintained by more people.
