@@ -5,7 +5,7 @@ This repository is an attempt at making GitHub issue data in the Jupyter ecosyst
 1. **Publishes issue data**. A GitHub workflow runs each day, scrapes the latest GitHub issues from a number of Jupyter sub-projects, and publishes them into a public location.
 2. **Shows issue tables**. A MyST website uses this data to display tables of issue metadata, sorted by sorted by community engagement (👍 and ❤️ reactions).
 
-**🔗 View the live site:** https://jupyter.org/github-issue-data/
+**🔗 View the live site:** <https://jupyter.org/issue-data/>
 
 _🚨 This is not an official Jupyter service, it is just an experiment at making issue data more useful to the community._
 
