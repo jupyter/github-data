@@ -5,6 +5,7 @@ pooch
 jupyterlab
 ipython
 markdown
+matplotlib
 
 # Downloading data
 github-to-sqlite

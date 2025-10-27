@@ -5,14 +5,15 @@ project:
   # description:
   # keywords: []
   # authors: []
-  github: https://github.com/jupyter/issue-data
+  github: https://github.com/jupyter/github-data
   toc:
     - file: index.md
       title: "Issue tables for Open Source Projects"
     - pattern: org/*.md
+    - file: whats-in-the-data.md
+      title: "What's in the Data?"
     - file: about.md
 site:
   template: book-theme
   options:
     logo_text: Issue tables for Jupyter projects
-    hide_outline: true

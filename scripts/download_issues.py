@@ -1,3 +1,31 @@
+"""Download GitHub data for Jupyter organizations to SQLite databases.
+
+This script uses github-to-sqlite to fetch repository metadata, issues, pull
+requests, contributors, and comments from GitHub organizations. The data is
+stored in SQLite databases and published as GitHub release artifacts.
+
+See: https://github.com/dogsheep/github-to-sqlite
+
+Re-download Logic:
+------------------
+This script filters at the repository level to minimize API calls, then
+github-to-sqlite handles the rest by fetching all data and replacing existing
+records in the database.
+
+1. Repositories: Downloads ALL repos in the org, but only processes those
+   updated in the last year for subsequent operations. This is the main
+   efficiency mechanism - inactive repos are skipped entirely.
+
+2. Issues & PRs: For active repos, github-to-sqlite fetches ALL issues/PRs
+   via the GitHub API and uses replace=True to update existing database records.
+   While all data is fetched, GitHub's API pagination makes this relatively fast.
+   See: https://github.com/dogsheep/github-to-sqlite/blob/main/github_to_sqlite/utils.py
+
+3. Comments: Downloads all comments for active repositories. github-to-sqlite
+   replaces existing comment records with fresh data from the API.
+
+The script is designed to be run daily.
+"""
 from subprocess import run
 import pandas as pd
 import sqlite3
@@ -33,8 +61,12 @@ def download_contributors_data(repos, db):
 
 
 def load_repos_data(db):
-    """Load and filter repository list from SQLite database. 
-    Only if updated in the last year."""
+    """Load and filter repository list from SQLite database.
+
+    Returns only repositories updated in the last year to avoid processing
+    archived/inactive repos. This significantly reduces API calls and
+    processing time for large organizations.
+    """
     query = """
         SELECT * FROM repos 
         WHERE datetime(updated_at) > datetime('now', '-1 year')
@@ -60,7 +92,7 @@ def download_issues_data(org, db):
 def download_prs_data(org, db):
     # Get list of repositories
     repos = load_repos_data(db)
-    
+
     # For each repository, download its issues
     print(f"Downloading PRs from {len(repos)} repositories...")
     for repo in track(repos):
