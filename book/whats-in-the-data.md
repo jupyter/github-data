@@ -107,6 +107,7 @@ plt.show()
 ### What labels are used across repositories?
 
 ```{code-cell} ipython3
+:label: test
 top_labels = labels[['name', 'color', 'description']].head(10)
 top_labels
 ```

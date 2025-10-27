@@ -6,3 +6,7 @@ This website lists **tables of GitHub issues that received a lot of user support
 
 +++ {"class": "col-page-right"}
 ![](#jupyter-book-table)
+
+(table1)=
+```{include} tst.txt
+```
