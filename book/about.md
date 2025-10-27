@@ -21,14 +21,14 @@ More generally, it's useful to have access to a lot of issue metadata for many r
 
 Download `nox`:
 
-```
+```bash
 pip install nox
 ```
 
 Run the MyST server with `nox`:
 
-```
-nox -s start
+```bash
+nox -s docs-live
 ```
 
 ## History of this project
