@@ -1,7 +1,14 @@
+"""Write one page per organization into book/org/, from templates/table.md.
+
+The site's myst.yml picks up every file in book/org/. That folder is
+generated and not committed, so run this before building the site.
+"""
+import tomllib
 from pathlib import Path
-orgs = ["jupyter", "jupyterlab", "jupyter-book", "jupyter-server", "jupyterhub"]
 
 here = Path(__file__).parent
+orgs = tomllib.loads((here / ".." / "orgs.toml").read_text())["orgs"]
+
 path_template = here / ".." / "templates" / "table.md"
 text = path_template.read_text()
 for org in orgs:

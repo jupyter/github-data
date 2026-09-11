@@ -1,42 +1,67 @@
 # Issue tables for open source projects
 
-This repository is an attempt at making GitHub issue data in the Jupyter ecosystem more accessible and useful. It primarily does two things:
+This repository makes GitHub issue data in the Jupyter ecosystem easier to access. It does two things:
 
-1. **Publishes issue data**. A GitHub workflow runs each day, scrapes the latest GitHub issues from a number of Jupyter sub-projects, and publishes them into a public location.
-2. **Shows issue tables**. A MyST website uses this data to display tables of issue metadata, sorted by sorted by community engagement (👍 and ❤️ reactions).
+1. Publishes issue data. A GitHub workflow runs each night, scrapes issues, pull requests, and comments from several Jupyter organizations, and publishes them as SQLite databases in a GitHub release.
+2. Shows issue tables. A MyST website reads that data and shows, for each organization, the open issues sorted by community reactions (👍 and ❤️).
 
 **🔗 View the live site:** <https://jupyter.org/github-data/>
 
 _🚨 This is not an official Jupyter service, it is just an experiment at making issue data more useful to the community._
 
+## Which organizations are included
+
+The list lives in [`orgs.toml`](./orgs.toml).
+To add an organization, add it there.
+The next nightly run scrapes it and the site gets a page for it.
+
 ## How this works
 
-### Data collection and release workflow
+### Collecting and publishing data
 
-1. **GitHub Workflow** (`.github/workflows/release.yml`): Runs periodically to download fresh issue data
-2. **Download Script** (`scripts/download_issues.py`): Uses [`github-to-sqlite`](https://github.com/dogsheep/github-to-sqlite) to fetch issues, PRs, and comments from Jupyter organizations
-3. **SQLite Database**: Stores data in `data/*.db` files
-4. **GitHub Releases**: Publishes database files as release assets for public access
+[`release.yml`](.github/workflows/release.yml) runs every night.
+It reads `orgs.toml`, then runs [`scripts/download_issues.py`](scripts/download_issues.py) once per organization, in parallel.
+That script uses [`github-to-sqlite`](https://github.com/dogsheep/github-to-sqlite) to write repositories, issues, pull requests, and comments into `data/<org>.db`.
+The workflow then attaches every `.db` file to the [`latest` release](https://github.com/jupyter/github-data/releases/tag/latest).
 
-### Website with issue tables
+To download the data yourself:
 
-1. **Page Generator** (`scripts/generate_pages.py`): Creates a page for each organization from a template
-2. **MyST Markdown Book**: Pages have code cells that use the SQLite databases for subproject-specific issues, and render issue tables
-3. **GitHub Pages**: Automatically builds and deploys the website on every push to `main`
+```bash
+gh release download latest --repo jupyter/github-data --pattern "jupyterhub.db"
+```
+
+### Building the website
+
+[`book.yml`](.github/workflows/book.yml) builds the site after every nightly release and on every push to `main`.
+
+1. [`scripts/generate_pages.py`](scripts/generate_pages.py) fills in [`templates/table.md`](templates/table.md) once per organization and writes the result to `book/org/`. That folder is generated, not committed.
+2. Each generated page downloads its organization's `.db` file from the latest release and renders the issue table.
+3. [MyST](https://mystmd.org) builds the site and GitHub Pages hosts it.
 
 ## Local development
 
-Build and preview the book locally:
+Preview the site with a live server:
 
 ```bash
 nox -s docs-live
 ```
 
-Launch JupyterLab in the same environment used to build the book (for debugging):
+Scrape one organization yourself (needs a `GITHUB_TOKEN` environment variable):
+
+```bash
+nox -s download -- jupyter-book
+```
+
+Launch JupyterLab in the same environment, for debugging:
 
 ```bash
 nox -s lab
 ```
+
+## Notes for maintainers
+
+GitHub disables scheduled workflows in repositories with no commits for 60 days.
+If the `latest` release stops updating, check the Actions tab and re-enable the release workflow.
 
 ## History
 
