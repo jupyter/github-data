@@ -1,4 +1,5 @@
 import nox
+import tomllib
 from shlex import split
 from os.path import realpath
 
@@ -9,6 +10,7 @@ nox.options.default_venv_backend = "uv"
 def docs_live(session):
     for ii in ["requirements.txt"]:
         session.run("uv", "pip", "install", "-U", "-r", ii, silent=True)
+    session.run("python", "scripts/generate_pages.py")
     session.chdir("book")
     session.run(*"myst start --execute".split(),*session.posargs)
 
@@ -16,6 +18,7 @@ def docs_live(session):
 def docs(session):
     for ii in ["requirements.txt"]:
         session.run("uv", "pip", "install", "-U", "-r", ii, silent=True)
+    session.run("python", "scripts/generate_pages.py")
     session.chdir("book")
     session.run(*"myst build --html --execute".split(),*session.posargs)
 
@@ -35,8 +38,8 @@ def download(session):
     """
     session.run("uv", "pip", "install", "-U", "-r", "requirements.txt", silent=True)
 
-    # Default organizations to download
-    orgs = ["jupyter", "jupyterlab", "jupyter-book", "jupyter-server", "jupyterhub"]
+    # Default to every organization in orgs.toml
+    orgs = tomllib.loads(open("orgs.toml").read())["orgs"]
 
     # Allow override from command line
     if session.posargs:

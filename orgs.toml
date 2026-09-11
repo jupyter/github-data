@@ -1,0 +1,14 @@
+# GitHub organizations to scrape. Add one here and the next nightly run
+# scrapes it and the site gets a page for it. See README.md for details.
+orgs = [
+    "jupyter",
+    "jupyterlab",
+    "jupyter-book",
+    "jupyter-server",
+    "jupyterhub",
+    "voila-dashboards",
+    # Contrib organizations
+    "jupyterlab-contrib",
+    "jupyterhub-contrib",
+    "myst-contrib",
+]
